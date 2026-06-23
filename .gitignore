@@ -1,0 +1,28 @@
+# Compiled binaries
+*.exe
+*.test
+*.out
+*.so
+*.dll
+
+# Go workspace
+go.work
+go.work.sum
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Vendored deps (if ever used)
+vendor/
+
+# Coverage
+coverage.txt
+coverage.out
+
+# API tokens / env vars — NEVER commit
+.env
+.env.*
+*.token
+.socialapis_token
