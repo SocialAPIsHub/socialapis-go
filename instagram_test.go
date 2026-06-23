@@ -11,18 +11,18 @@ import (
 
 // Mirrors the real envelope: payload under "data".
 var sampleProfilePayload = map[string]any{
-	"id":               "25025320",
-	"pk":               "25025320",
-	"fbid":             "17841400039600391",
-	"username":         "instagram",
-	"full_name":        "Instagram",
-	"biography":        "Discover what's new on Instagram",
-	"followers_count":  685_000_000,
-	"following_count":  229,
-	"media_count":      7900,
-	"is_verified":      true,
-	"is_private":       false,
-	"profile_pic_url":  "https://scontent.cdninstagram.com/profile.jpg",
+	"id":              "25025320",
+	"pk":              "25025320",
+	"fbid":            "17841400039600391",
+	"username":        "instagram",
+	"full_name":       "Instagram",
+	"biography":       "Discover what's new on Instagram",
+	"followers_count": 685_000_000,
+	"following_count": 229,
+	"media_count":     7900,
+	"is_verified":     true,
+	"is_private":      false,
+	"profile_pic_url": "https://scontent.cdninstagram.com/profile.jpg",
 }
 
 func sampleProfileResponse() []byte {

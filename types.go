@@ -81,19 +81,19 @@ type PageInfo struct {
 // NOTE: this endpoint has NO envelope wrapper — payload sits at the
 // top level alongside `message` and `meta`.
 type GroupInfo struct {
-	GroupID                     string         `json:"group_id,omitempty"`
-	GroupMemberCount            string         `json:"group_member_count,omitempty"`
-	GroupTotalMembersInfoText   string         `json:"group_total_members_info_text,omitempty"`
-	GroupNewMembersInfoText     string         `json:"group_new_members_info_text,omitempty"`
-	DescriptionText             string         `json:"description_text,omitempty"`
-	PrivacyInfoText             map[string]any `json:"privacy_info_text,omitempty"`
-	CreatedTime                 int64          `json:"created_time,omitempty"`
-	GroupRules                  []any          `json:"group_rules,omitempty"`
-	GroupHistory                map[string]any `json:"group_history,omitempty"`
-	AdminTags                   []any          `json:"admin_tags,omitempty"`
-	GroupLocations              []any          `json:"group_locations,omitempty"`
-	NumberOfPostsInLastDay      int            `json:"number_of_posts_in_last_day,omitempty"`
-	NumberOfPostsInLastMonth    int            `json:"number_of_posts_in_last_month,omitempty"`
+	GroupID                   string         `json:"group_id,omitempty"`
+	GroupMemberCount          string         `json:"group_member_count,omitempty"`
+	GroupTotalMembersInfoText string         `json:"group_total_members_info_text,omitempty"`
+	GroupNewMembersInfoText   string         `json:"group_new_members_info_text,omitempty"`
+	DescriptionText           string         `json:"description_text,omitempty"`
+	PrivacyInfoText           map[string]any `json:"privacy_info_text,omitempty"`
+	CreatedTime               int64          `json:"created_time,omitempty"`
+	GroupRules                []any          `json:"group_rules,omitempty"`
+	GroupHistory              map[string]any `json:"group_history,omitempty"`
+	AdminTags                 []any          `json:"admin_tags,omitempty"`
+	GroupLocations            []any          `json:"group_locations,omitempty"`
+	NumberOfPostsInLastDay    int            `json:"number_of_posts_in_last_day,omitempty"`
+	NumberOfPostsInLastMonth  int            `json:"number_of_posts_in_last_month,omitempty"`
 
 	// Forward-compat
 	Extra map[string]any `json:"-"`
