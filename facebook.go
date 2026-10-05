@@ -149,14 +149,18 @@ func (f *Facebook) GetGroupDetails(ctx context.Context, group string, extra map[
 	return &gi, nil
 }
 
-// GetGroupMetadata returns lightweight Group metadata (name, id, url, image).
+// GetGroupMetadata returns the raw JSON from the Group details endpoint.
+//
+// Deprecated: the API has no separate metadata endpoint. Use
+// GetGroupDetails, which returns a typed *GroupInfo. GetGroupMetadata
+// will be removed in v0.2.0.
 func (f *Facebook) GetGroupMetadata(ctx context.Context, group string, extra map[string]any) (Response, error) {
 	link, err := asFacebookGroupURL(group)
 	if err != nil {
 		return nil, err
 	}
 	out := Response{}
-	if err := f.get(ctx, "/facebook/groups/metadata", mergeParams(map[string]string{"link": link}, extra), &out); err != nil {
+	if err := f.get(ctx, "/facebook/groups/details", mergeParams(map[string]string{"link": link}, extra), &out); err != nil {
 		return nil, err
 	}
 	return out, nil

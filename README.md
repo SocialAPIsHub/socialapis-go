@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/go-%3E%3D1.22-blue.svg)](https://go.dev)
 
-Idiomatic Go client for the [socialapis.io](https://socialapis.io) REST API. Mirrors the [Python](https://pypi.org/project/socialapis-sdk/) and [JavaScript](https://www.npmjs.com/package/socialapis-sdk) SDKs — same 51 endpoints, same envelope handling, same migration aliases — but with Go conventions: context-aware methods, functional options, typed errors, zero external dependencies.
+Idiomatic Go client for the [socialapis.io](https://socialapis.io) REST API. Mirrors the [Python](https://pypi.org/project/socialapis-sdk/) and [JavaScript](https://www.npmjs.com/package/socialapis-sdk) SDKs — same 50 endpoints, same envelope handling, same migration aliases — but with Go conventions: context-aware methods, functional options, typed errors, zero external dependencies.
 
 ```bash
 go get github.com/SocialAPIsHub/socialapis-go@latest
@@ -73,7 +73,7 @@ page, _ := fb.GetPageInfo(ctx, "EngenSA", nil)
 
 **Pages**: `GetPageID`, `GetPageInfo` → `*PageInfo`, `GetPagePosts`, `GetPageReels`, `GetPageVideos`
 
-**Groups**: `GetGroupID`, `GetGroupDetails` → `*GroupInfo`, `GetGroupMetadata`, `GetGroupPosts`, `GetGroupVideos`
+**Groups**: `GetGroupID`, `GetGroupDetails` → `*GroupInfo`, `GetGroupPosts`, `GetGroupVideos`
 
 **Posts**: `GetPostID`, `GetPostDetails`, `GetPostDetailsExtended`, `GetPostComments`, `GetCommentReplies`, `GetPostAttachments`, `GetVideoPostDetails`
 

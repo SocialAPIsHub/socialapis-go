@@ -5,6 +5,16 @@ All notable changes to this project will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] — 2026-10-05
+
+### Fixed
+
+- `GetGroupMetadata` called `/facebook/groups/metadata`, which doesn't exist on the API, so every call returned a 404. It now calls `/facebook/groups/details` and returns the raw JSON response.
+
+### Deprecated
+
+- `GetGroupMetadata`. Use `GetGroupDetails`, which returns a typed `*GroupInfo`. It will be removed in v0.2.0.
+
 ## [0.1.1] — Unreleased
 
 Initial Go release. Full coverage of the SocialAPIs.io public REST surface in Go — mirrors the Python (`socialapis-sdk` on PyPI) and JavaScript (`socialapis-sdk` on npm) SDKs.

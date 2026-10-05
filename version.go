@@ -8,7 +8,7 @@ package socialapis
 // Lockstep with the Python (`socialapis-sdk` on PyPI) and JavaScript
 // (`socialapis-sdk` on npm) SDKs in this family. All three start at
 // 0.1.1 so users know the SDKs are at feature parity.
-const Version = "0.1.1"
+const Version = "0.1.2"
 
 // userAgent is the User-Agent header value sent on every request.
 const userAgent = "socialapis-go/" + Version
