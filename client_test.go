@@ -202,3 +202,24 @@ func TestErrorMapping400(t *testing.T) {
 		t.Fatalf("expected *BadRequestError, got %T: %v", err, err)
 	}
 }
+
+func TestGetGroupMetadataCallsGroupDetailsEndpoint(t *testing.T) {
+	var gotPath string
+	fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
+		gotPath = r.URL.Path
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"name":"Test Group","id":"123"}`))
+	})
+	defer srv.Close()
+
+	out, err := fb.GetGroupMetadata(context.Background(), "https://www.facebook.com/groups/123", nil)
+	if err != nil {
+		t.Fatalf("GetGroupMetadata: %v", err)
+	}
+	if !strings.HasSuffix(gotPath, "/facebook/groups/details") {
+		t.Errorf("path = %q, want suffix /facebook/groups/details", gotPath)
+	}
+	if out["name"] != "Test Group" {
+		t.Errorf("name = %v, want Test Group", out["name"])
+	}
+}
