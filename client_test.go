@@ -223,3 +223,53 @@ func TestGetGroupMetadataCallsGroupDetailsEndpoint(t *testing.T) {
 		t.Errorf("name = %v, want Test Group", out["name"])
 	}
 }
+
+func TestAlbumMethodsCallAlbumEndpoints(t *testing.T) {
+	cases := []struct {
+		name     string
+		call     func(fb *Facebook) (Response, error)
+		path     string
+		param    string
+		value    string
+		extraKey string
+		extraVal string
+	}{
+		{"GetPageAlbums", func(fb *Facebook) (Response, error) {
+			return fb.GetPageAlbums(context.Background(), "100044395330646", map[string]any{"limit": 16})
+		}, "/facebook/pages/albums", "profile_id", "100044395330646", "limit", "16"},
+		{"GetGroupAlbums", func(fb *Facebook) (Response, error) {
+			return fb.GetGroupAlbums(context.Background(), "187988788687356", nil)
+		}, "/facebook/groups/albums", "group_id", "187988788687356", "", ""},
+		{"GetAlbumItems", func(fb *Facebook) (Response, error) {
+			return fb.GetAlbumItems(context.Background(), "826298618859975", map[string]any{"end_cursor": "abc"})
+		}, "/facebook/albums/items", "album_id", "826298618859975", "end_cursor", "abc"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			var gotPath string
+			var gotQuery map[string][]string
+			fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
+				gotPath = r.URL.Path
+				gotQuery = r.URL.Query()
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`{"items":[]}`))
+			})
+			defer srv.Close()
+
+			if _, err := tc.call(fb); err != nil {
+				t.Fatalf("%s: %v", tc.name, err)
+			}
+			if !strings.HasSuffix(gotPath, tc.path) {
+				t.Errorf("path = %q, want suffix %s", gotPath, tc.path)
+			}
+			if got := gotQuery[tc.param]; len(got) != 1 || got[0] != tc.value {
+				t.Errorf("%s = %v, want %s", tc.param, got, tc.value)
+			}
+			if tc.extraKey != "" {
+				if got := gotQuery[tc.extraKey]; len(got) != 1 || got[0] != tc.extraVal {
+					t.Errorf("%s = %v, want %s", tc.extraKey, got, tc.extraVal)
+				}
+			}
+		})
+	}
+}
