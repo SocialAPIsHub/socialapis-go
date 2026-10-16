@@ -293,3 +293,21 @@ func TestGetGroupVideosSendsLink(t *testing.T) {
 		t.Errorf("group_id should not be sent")
 	}
 }
+
+func TestGetGroupPostsSendsLink(t *testing.T) {
+	var gotPath, gotLink string
+	fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
+		gotPath = r.URL.Path
+		gotLink = r.URL.Query().Get("link")
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"posts":[]}`))
+	})
+	defer srv.Close()
+
+	if _, err := fb.GetGroupPosts(context.Background(), "gieldagryplanszowe", nil); err != nil {
+		t.Fatalf("GetGroupPosts: %v", err)
+	}
+	if !strings.HasSuffix(gotPath, "/facebook/groups/posts") || gotLink != "https://www.facebook.com/groups/gieldagryplanszowe" {
+		t.Errorf("path = %q, link = %q", gotPath, gotLink)
+	}
+}
