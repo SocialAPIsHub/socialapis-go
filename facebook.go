@@ -118,6 +118,17 @@ func (f *Facebook) GetPageVideos(ctx context.Context, page string, extra map[str
 	return out, nil
 }
 
+// GetPageAlbums lists the photo albums of a Facebook Page. Takes the
+// numeric page ID (resolve a URL with GetPageID). Optional extras:
+// "limit" (8-16), "end_cursor". Use GetAlbumItems for the photos in an album.
+func (f *Facebook) GetPageAlbums(ctx context.Context, profileID string, extra map[string]any) (Response, error) {
+	out := Response{}
+	if err := f.get(ctx, "/facebook/pages/albums", mergeParams(map[string]string{"profile_id": profileID}, extra), &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // =====================================================================
 // GROUPS
 // =====================================================================
@@ -179,10 +190,37 @@ func (f *Facebook) GetGroupPosts(ctx context.Context, group string, extra map[st
 	return out, nil
 }
 
-// GetGroupVideos returns videos posted to a Group (takes numeric group_id).
-func (f *Facebook) GetGroupVideos(ctx context.Context, groupID string, extra map[string]any) (Response, error) {
+// GetGroupVideos returns videos posted to a Facebook Group. group can be the
+// group URL, slug or numeric ID. Optional extra: "end_cursor".
+func (f *Facebook) GetGroupVideos(ctx context.Context, group string, extra map[string]any) (Response, error) {
+	link, err := asFacebookGroupURL(group)
+	if err != nil {
+		return nil, err
+	}
 	out := Response{}
-	if err := f.get(ctx, "/facebook/groups/videos", mergeParams(map[string]string{"group_id": groupID}, extra), &out); err != nil {
+	if err := f.get(ctx, "/facebook/groups/videos", mergeParams(map[string]string{"link": link}, extra), &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GetGroupAlbums lists the photo albums of a public Facebook Group. Takes
+// the numeric group ID (resolve a URL with GetGroupID). Optional extra:
+// "limit" (8-16).
+func (f *Facebook) GetGroupAlbums(ctx context.Context, groupID string, extra map[string]any) (Response, error) {
+	out := Response{}
+	if err := f.get(ctx, "/facebook/groups/albums", mergeParams(map[string]string{"group_id": groupID}, extra), &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GetAlbumItems returns the photos and videos inside a Facebook album, from
+// a page or a group. albumID comes from GetPageAlbums or GetGroupAlbums.
+// Optional extra: "end_cursor".
+func (f *Facebook) GetAlbumItems(ctx context.Context, albumID string, extra map[string]any) (Response, error) {
+	out := Response{}
+	if err := f.get(ctx, "/facebook/albums/items", mergeParams(map[string]string{"album_id": albumID}, extra), &out); err != nil {
 		return nil, err
 	}
 	return out, nil
