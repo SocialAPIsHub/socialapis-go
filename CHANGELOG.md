@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Facebook photo albums:** `GetPageAlbums(ctx, profileID, extra)`, `GetGroupAlbums(ctx, groupID, extra)` and `GetAlbumItems(ctx, albumID, extra)`, backed by `/facebook/pages/albums`, `/facebook/groups/albums` and `/facebook/albums/items`. The SDK now covers all 53 endpoints.
 
+### Fixed
+
+- **`GetGroupVideos`** sent `group_id`, but `/facebook/groups/videos` requires `link`, so calls failed. It now takes the group URL, slug or numeric ID and sends `link`.
+
 ## [0.1.2] — 2026-10-05
 
 ### Fixed

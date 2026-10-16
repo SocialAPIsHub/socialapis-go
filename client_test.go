@@ -273,3 +273,23 @@ func TestAlbumMethodsCallAlbumEndpoints(t *testing.T) {
 		})
 	}
 }
+
+func TestGetGroupVideosSendsLink(t *testing.T) {
+	var gotQuery map[string][]string
+	fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
+		gotQuery = r.URL.Query()
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"videos":[]}`))
+	})
+	defer srv.Close()
+
+	if _, err := fb.GetGroupVideos(context.Background(), "187988788687356", nil); err != nil {
+		t.Fatalf("GetGroupVideos: %v", err)
+	}
+	if got := gotQuery["link"]; len(got) != 1 || got[0] != "https://www.facebook.com/groups/187988788687356" {
+		t.Errorf("link = %v", got)
+	}
+	if _, ok := gotQuery["group_id"]; ok {
+		t.Errorf("group_id should not be sent")
+	}
+}

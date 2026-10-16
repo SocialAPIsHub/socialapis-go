@@ -177,23 +177,15 @@ func (f *Facebook) GetGroupMetadata(ctx context.Context, group string, extra map
 	return out, nil
 }
 
-// GetGroupPosts returns recent posts from a Facebook Group.
-func (f *Facebook) GetGroupPosts(ctx context.Context, group string, extra map[string]any) (Response, error) {
+// GetGroupVideos returns videos posted to a Facebook Group. group can be the
+// group URL, slug or numeric ID. Optional extra: "end_cursor".
+func (f *Facebook) GetGroupVideos(ctx context.Context, group string, extra map[string]any) (Response, error) {
 	link, err := asFacebookGroupURL(group)
 	if err != nil {
 		return nil, err
 	}
 	out := Response{}
-	if err := f.get(ctx, "/facebook/groups/posts", mergeParams(map[string]string{"link": link}, extra), &out); err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// GetGroupVideos returns videos posted to a Group (takes numeric group_id).
-func (f *Facebook) GetGroupVideos(ctx context.Context, groupID string, extra map[string]any) (Response, error) {
-	out := Response{}
-	if err := f.get(ctx, "/facebook/groups/videos", mergeParams(map[string]string{"group_id": groupID}, extra), &out); err != nil {
+	if err := f.get(ctx, "/facebook/groups/videos", mergeParams(map[string]string{"link": link}, extra), &out); err != nil {
 		return nil, err
 	}
 	return out, nil
