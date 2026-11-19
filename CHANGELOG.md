@@ -5,6 +5,12 @@ All notable changes to this project will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] — 2026-11-19
+
+### Fixed
+
+- **Out of credits now returns `*InsufficientCreditsError`.** The API answers `403 {"error": "Insufficient credits", "creditsNeeded": n}` when the balance is too low, but the SDK only mapped 402, so callers got a `*BadRequestError`. A 403 about credits (and still a 402) now returns `*InsufficientCreditsError`; other 403s (a deactivated account, an expired plan) stay `*BadRequestError`.
+
 ## [0.1.3] — 2026-10-16
 
 ### Added

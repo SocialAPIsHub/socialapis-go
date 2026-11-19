@@ -36,7 +36,8 @@ func (e *AuthenticationError) Error() string {
 	return "socialapis: authentication failed: " + e.APIError.Error()
 }
 
-// InsufficientCreditsError is 402 — credit balance exhausted.
+// InsufficientCreditsError is 403 "Insufficient credits" (or 402) — not
+// enough credits left.
 // Retryable after refill / upgrade. Tracked as a distinct error so paid
 // integrations can auto-top-up on this signal.
 type InsufficientCreditsError struct{ APIError }
@@ -56,7 +57,8 @@ func (e *RateLimitError) Error() string {
 	return fmt.Sprintf("socialapis: rate-limited, retry after %.0fs: %s", e.RetryAfterSeconds, e.APIError.Error())
 }
 
-// BadRequestError is 4xx (excluding 401/402/429) — client-side mistake.
+// BadRequestError is 4xx (excluding 401/429 and the out-of-credits
+// 402/403) — client-side mistake.
 // NOT retryable without fixing input.
 type BadRequestError struct{ APIError }
 
