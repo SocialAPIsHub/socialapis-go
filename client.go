@@ -138,6 +138,12 @@ func (c *baseConfig) translateError(resp *http.Response, body []byte) error {
 		Body:       parsed,
 	}
 
+	// Out of credits: the API answers 403 {"error": "Insufficient credits",
+	// "creditsNeeded": n}. 402 is kept for compatibility.
+	if resp.StatusCode == 403 && isCreditError(parsed) {
+		return &InsufficientCreditsError{APIError: base}
+	}
+
 	switch resp.StatusCode {
 	case 401:
 		return &AuthenticationError{APIError: base}
@@ -156,6 +162,20 @@ func (c *baseConfig) translateError(resp *http.Response, body []byte) error {
 		return &APIServerError{APIError: base}
 	}
 	return &BadRequestError{APIError: base}
+}
+
+// isCreditError reports whether a 403 is about credits (not a paused
+// account or an expired plan).
+func isCreditError(body map[string]any) bool {
+	if _, ok := body["creditsNeeded"]; ok {
+		return true
+	}
+	for _, key := range []string{"error", "message"} {
+		if s, ok := body[key].(string); ok && strings.Contains(strings.ToLower(s), "credit") {
+			return true
+		}
+	}
+	return false
 }
 
 // extractMessage pulls a human-readable error from the API's response

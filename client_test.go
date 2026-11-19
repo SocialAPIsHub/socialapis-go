@@ -169,6 +169,39 @@ func TestErrorMapping402(t *testing.T) {
 	}
 }
 
+func TestErrorMapping403InsufficientCredits(t *testing.T) {
+	fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
+		_, _ = w.Write([]byte(`{"error": "Insufficient credits", "message": "You need 3 credits", "creditsNeeded": 3}`))
+	})
+	defer srv.Close()
+
+	_, err := fb.GetPageInfo(context.Background(), "EngenSA", nil)
+	var insufficient *InsufficientCreditsError
+	if !errors.As(err, &insufficient) {
+		t.Fatalf("expected *InsufficientCreditsError, got %T: %v", err, err)
+	}
+	if insufficient.StatusCode != 403 {
+		t.Errorf("StatusCode = %d", insufficient.StatusCode)
+	}
+}
+
+func TestErrorMapping403ExpiredPlanStaysBadRequest(t *testing.T) {
+	fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
+		_, _ = w.Write([]byte(`{"success": false, "message": "Subscription expired", "code": "SUBSCRIPTION_EXPIRED"}`))
+	})
+	defer srv.Close()
+
+	_, err := fb.GetPageInfo(context.Background(), "EngenSA", nil)
+	var bad *BadRequestError
+	if !errors.As(err, &bad) {
+		t.Fatalf("expected *BadRequestError, got %T: %v", err, err)
+	}
+}
+
 func TestErrorMapping429WithRetryAfter(t *testing.T) {
 	fb, srv := newTestFacebook(t, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
